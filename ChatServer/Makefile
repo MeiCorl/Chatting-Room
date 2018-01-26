@@ -1,19 +1,19 @@
 CC = g++
 CFLAGS = -g
   
-all: clean Room.o DBHelper.o ChatServer.o ChatServer  
+all: clean Room.o utils.o ChatServer.o ChatServer  
   
 Room.o: Room.h  
 	${CC} ${CFLAGS} -c Room.cpp  
 
-DBHelper.o: DBHelper.h
-	${CC} ${CFLAGS} -c DBHelper.cpp 
+utils.o: utils.h
+	${CC} ${CFLAGS} -c utils.cpp 
 
 ChatServer.o: Room.h  
 	${CC} ${CFLAGS} -c ChatServer.cpp  
   
 ChatServer: Room.o ChatServer.o  
-	${CC} ${CFLAGS} Room.o ChatServer.o DBHelper.o -l event -l json -l mysqlcppconn -o ChatServer  
+	${CC} ${CFLAGS} Room.o ChatServer.o utils.o -l event -l json -o ChatServer  
 clean:  
 	rm -rf *.o  
 	rm -rf ChatServer 
