@@ -1,12 +1,10 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-	<qresource>
-		<file img0="main.jpg">./image/main.jpg</file>
-		<file img1="a.jpg">./image/a.jpg</file>
-		<file img2="b.jpg">./image/b.jpg</file>
-		<file img3="c.jpg">./image/c.jpg</file>
-		<file img4="d.jpg">./image/d.jpg</file>
-		<file img5="e.jpg">./image/e.jpg</file>
-		<file img6="f.jpg">./image/f.jpg</file>
-	</qresource>
+<RCC>
+  <qresource>
+    <file>./image/main.jpg</file>
+    <file>./image/a.jpg</file>
+    <file>./image/b.jpg</file>
+    <file>./image/c.jpg</file>
+    <file>./image/d.jpg</file>
+    <file>./image/e.jpg</file>
+  </qresource>
 </RCC>

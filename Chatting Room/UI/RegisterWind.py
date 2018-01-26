@@ -1,0 +1,98 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'RegisterWind.ui'
+#
+# Created by: PyQt5 UI code generator 5.9.2
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_RegitserDialog(object):
+    def setupUi(self, RegitserDialog):
+        RegitserDialog.setObjectName("RegitserDialog")
+        RegitserDialog.resize(519, 329)
+        RegitserDialog.setStyleSheet("background-image: url(:/image/e.jpg);")
+        self.label = QtWidgets.QLabel(RegitserDialog)
+        self.label.setGeometry(QtCore.QRect(150, 60, 111, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setStyleSheet("background: transparent")
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(RegitserDialog)
+        self.label_2.setGeometry(QtCore.QRect(160, 100, 111, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setStyleSheet("background: transparent")
+        self.label_2.setObjectName("label_2")
+        self.label_3 = QtWidgets.QLabel(RegitserDialog)
+        self.label_3.setGeometry(QtCore.QRect(60, 140, 201, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_3.setFont(font)
+        self.label_3.setStyleSheet("background: transparent")
+        self.label_3.setObjectName("label_3")
+        self.user_name = QtWidgets.QLineEdit(RegitserDialog)
+        self.user_name.setGeometry(QtCore.QRect(270, 59, 171, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        self.user_name.setFont(font)
+        self.user_name.setObjectName("user_name")
+        self.password_1 = QtWidgets.QLineEdit(RegitserDialog)
+        self.password_1.setGeometry(QtCore.QRect(270, 100, 171, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        self.password_1.setFont(font)
+        self.password_1.setObjectName("password_1")
+        self.password_2 = QtWidgets.QLineEdit(RegitserDialog)
+        self.password_2.setGeometry(QtCore.QRect(270, 140, 171, 31))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        self.password_2.setFont(font)
+        self.password_2.setObjectName("password_2")
+        self.registerButton = QtWidgets.QPushButton(RegitserDialog)
+        self.registerButton.setGeometry(QtCore.QRect(90, 240, 91, 41))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.registerButton.setFont(font)
+        self.registerButton.setObjectName("registerButton")
+        self.cancelButton = QtWidgets.QPushButton(RegitserDialog)
+        self.cancelButton.setGeometry(QtCore.QRect(340, 240, 91, 41))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cancelButton.setFont(font)
+        self.cancelButton.setObjectName("cancelButton")
+
+        self.retranslateUi(RegitserDialog)
+        QtCore.QMetaObject.connectSlotsByName(RegitserDialog)
+
+    def retranslateUi(self, RegitserDialog):
+        _translate = QtCore.QCoreApplication.translate
+        RegitserDialog.setWindowTitle(_translate("RegitserDialog", "Registation"))
+        self.label.setText(_translate("RegitserDialog", "User Name"))
+        self.label_2.setText(_translate("RegitserDialog", "Password"))
+        self.label_3.setText(_translate("RegitserDialog", "Configure Password"))
+        self.registerButton.setText(_translate("RegitserDialog", "Register"))
+        self.cancelButton.setText(_translate("RegitserDialog", "Cancel"))
+
+import img_rc
