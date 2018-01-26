@@ -1,4 +1,5 @@
 #include "Room.h"
+#include "DBHelper.h"
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
@@ -19,7 +20,8 @@ const int SERVER_PORT = 1234;
 const int roomNumber = 6;
 vector<Room*> roomList;
 map<int, int> client_room_map;    //   key: client_fd,   value: room_id
-event_base *evbase; 
+event_base *evbase;
+DBHelper *dbh; 
 
 void setnonblock(int sock)
 {
@@ -61,8 +63,25 @@ void onRead(int fd, short ev, void *arg)
     	perror("Error: invalid mesage!\n");
     	return;
     }
- // Json::Value info;
     switch(msg["type"].asInt()){
+    	case 0:
+    	{
+    		cout<<"type 0"<<endl;
+    		Json::Value info;
+    		info["type"]=0;
+    		string user=msg["name"].asString();
+    		string password;
+    		password = dbh->query(user);
+    		if(password == msg["password"].asString())   // OK
+				info["body"]=0;    
+			else if(password == "")   // user does not exist
+				info["body"]=1;
+			else
+				info["body"]=2;       // password does not match
+    		string info_str = info.toStyledString();
+    		write(fd, info_str.c_str(), info_str.size());
+    		break;
+    	}
     	case 1:  
     	{	
     		cout<<"type 1"<<endl;  
@@ -157,6 +176,10 @@ int main(void)
 	// Initialize chatting room info.
 	for(int i=0;i<roomNumber;i++)
 		roomList.push_back(new Room());
+
+    // Initialize database
+    dbh = new DBHelper();
+    cout<<"Database initialized..."<<endl;
 
 	int listen_fd;
 	struct sockaddr_in listen_addr;
