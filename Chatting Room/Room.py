@@ -86,11 +86,12 @@ class Room(QtWidgets.QMainWindow, Ui_Room):
         if text == "":
             QMessageBox.information(None, "Warning", "Can not send null message!")
             return
-        self.message.append(Room.user_name + time.strftime(' %H:%M:%S', time.localtime(time.time())))
+        Time = time.strftime(' %Y/%m/%d %H:%M:%S', time.localtime(time.time()))
+        self.message.append(Room.user_name + Time)
         self.message.append(text + "\n")
 
         # 发送消息
-        msg = {"type": 3, "name": Room.user_name, "body": text}
+        msg = {"type": 3, "sender": Room.user_name, "time": Time, "body": text}
         data = json.dumps(msg).encode()
         Room.client_socket.send(data)
         self.textEdit.clear()

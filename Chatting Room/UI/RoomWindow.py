@@ -12,6 +12,10 @@ class Ui_Room(object):
     def setupUi(self, Room):
         Room.setObjectName("Room")
         Room.resize(441, 463)
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        font.setPointSize(12)
+        Room.setFont(font)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/image/main.jpg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         Room.setWindowIcon(icon)

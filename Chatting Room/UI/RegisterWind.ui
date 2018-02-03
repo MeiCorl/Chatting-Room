@@ -13,14 +13,17 @@
   <property name="windowTitle">
    <string>Registation</string>
   </property>
+  <property name="accessibleDescription">
+   <string notr="true"/>
+  </property>
   <property name="styleSheet">
    <string notr="true">background-image: url(:/image/e.jpg);</string>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>60</y>
+     <x>120</x>
+     <y>20</y>
      <width>111</width>
      <height>31</height>
     </rect>
@@ -43,8 +46,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>100</y>
+     <x>130</x>
+     <y>60</y>
      <width>111</width>
      <height>31</height>
     </rect>
@@ -67,8 +70,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>140</y>
+     <x>30</x>
+     <y>100</y>
      <width>201</width>
      <height>31</height>
     </rect>
@@ -91,8 +94,8 @@
   <widget class="QLineEdit" name="user_name">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>59</y>
+     <x>240</x>
+     <y>19</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -103,12 +106,15 @@
      <pointsize>14</pointsize>
     </font>
    </property>
+   <property name="text">
+    <string>Tom</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="password_1">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>100</y>
+     <x>240</x>
+     <y>60</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -123,8 +129,8 @@
   <widget class="QLineEdit" name="password_2">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>140</y>
+     <x>240</x>
+     <y>100</y>
      <width>171</width>
      <height>31</height>
     </rect>
@@ -139,8 +145,8 @@
   <widget class="QPushButton" name="registerButton">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>240</y>
+     <x>80</x>
+     <y>270</y>
      <width>91</width>
      <height>41</height>
     </rect>
@@ -160,8 +166,8 @@
   <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>240</y>
+     <x>380</x>
+     <y>270</y>
      <width>91</width>
      <height>41</height>
     </rect>
@@ -176,6 +182,89 @@
    </property>
    <property name="text">
     <string>Cancel</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="iconButton">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>200</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Icon</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="head_icon">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>190</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>150</y>
+     <width>91</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>14</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background: transparent</string>
+   </property>
+   <property name="text">
+    <string>Signature</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="signature">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>150</y>
+     <width>261</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Hello, My name is Tom</string>
    </property>
   </widget>
  </widget>
