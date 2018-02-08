@@ -1,0 +1,2 @@
+{"name":"梅超","portrait":"image/meicorl.jpg","signature":"放眼天下，唯我独帅！"}
+{"name":"Tom","portrait":"image/timg.jpg","signature":"Hello, My name is Tom"}

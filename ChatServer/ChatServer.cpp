@@ -1,14 +1,17 @@
 #include "Room.h"
 #include "utils.h"
+#include "MessageQueue.h"
 #include <iostream>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #include <fcntl.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include <json/json.h>
 #include <event2/event_struct.h>
 #include <event2/event.h>
 #include <event2/util.h>
@@ -19,6 +22,7 @@ const int SERVER_PORT = 1234;
 const int roomNumber = 6;
 vector<Room*> roomList;
 map<int, int> client_room_map;    //   key: client_fd,   value: room_id     表示在线用户和其所在房间id的映射， -1表示在大厅
+map<string, MessageQueue*> mq;
 event_base *evbase;
 Utils* util;
 
@@ -41,8 +45,8 @@ void setnonblock(int sock)
 
 void onRead(int fd, short ev, void *arg)
 {
-	char buf[512];
-	int len=read(fd,buf,512);
+	char buf[256];
+	int len=read(fd,buf,256);
 	if (len <= 0) {  
         cout << "client closed" << endl;  
         // 连接结束(=0)或连接错误(<0)，将事件删除并释放内存空间
@@ -84,6 +88,22 @@ void onRead(int fd, short ev, void *arg)
     		}	
     		string info_str = info.toStyledString();
     		write(fd, info_str.c_str(), info_str.size());
+
+            // send offline message
+            usleep(100000);
+            if(res == 0){
+                if(mq.find(msg["name"].asString()) != mq.end() && !mq[msg["name"].asString()]->isEmpty())
+                {
+                    MessageQueue* msgQueue = mq[msg["name"].asString()];
+                    while(!msgQueue->isEmpty())
+                    {
+                        Json::Value offline_msg = msgQueue->pop();
+                        info_str = offline_msg.toStyledString();
+                        write(fd, info_str.c_str(), info_str.size());
+                        usleep(100000);
+                    }
+                }
+            }
     		break;
     	}
     	case 1:  // jion room
@@ -114,7 +134,7 @@ void onRead(int fd, short ev, void *arg)
     		}
     		break;
     	}
-    	case 3:  // send message
+    	case 3:  // send room message
     	{
     		int room_id=client_room_map[fd];
     		for(set<int>::iterator it=roomList[room_id]->begin();
@@ -128,11 +148,27 @@ void onRead(int fd, short ev, void *arg)
     	}  
     	case 4:  // register
     	{
-    		int res = util->addUser(msg["name"].asString(), msg["password"].asString());
-    		Json::Value info;
-    		info["type"]=4;
-    		info["body"]=res;
-    		string info_str = info.toStyledString();
+    		int res = util->addUser(msg["name"].asString(), msg["password"].asString(), msg["signature"].asString(), msg["portrait"].asString());
+            if(!res){
+                string user_home = "user/" + msg["name"].asString();
+                if(mkdir(user_home.c_str(),S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO))
+                    perror("mkdir");
+                // create self_info.txt
+                Json::FastWriter fwriter;
+                string self_info_path = user_home + "/self_info.txt";
+                ofstream out1(self_info_path.c_str(),ios::out);
+                msg.removeMember("type");
+                out1<<fwriter.write(msg);
+                out1.close();
+                // create friend_list.txt
+                string friend_list_path = user_home + "/friend_list.txt";
+                ofstream out2(friend_list_path, ios::out);
+                out2.close();
+             }
+            Json::Value info;
+            msg["type"]=4;
+    		msg["body"]=res;
+    		string info_str = msg.toStyledString();
     		write(fd, info_str.c_str(), info_str.size());
     		break;
     	}
@@ -141,6 +177,97 @@ void onRead(int fd, short ev, void *arg)
     		util->deleteOnlineUser(fd);
     		break;
     	}
+    	case 6:  // personal message
+    	{
+            int dst_fd = util->getFdByName(msg["receiver"].asString());
+    		if(dst_fd != -1)   // online
+                write(dst_fd, buf, len);
+            else{    // offline
+                if(mq.find(msg["receiver"].asString()) == mq.end())
+                    mq[msg["receiver"].asString()] = new MessageQueue;
+                mq[msg["receiver"].asString()]->push(msg);
+            }
+    		break;
+    	}
+        case 7: // add friend
+        {
+            int dst_fd;
+            if(msg["isResponse"].asBool())
+            {
+                dst_fd = util->getFdByName(msg["self_name"].asString());
+                if(dst_fd != -1)   // online
+                    write(dst_fd, buf, len);
+                else{    // offline
+                    if(mq.find(msg["self_name"].asString()) == mq.end())
+                        mq[msg["self_name"].asString()] = new MessageQueue;
+                    mq[msg["self_name"].asString()]->push(msg);
+                }
+
+                if(msg["body"].asInt() == 1)
+                {
+                    User* friend1 = util->getUserByName(msg["friend_name"].asString());
+                    if(friend1 != NULL)
+                    {
+                        Json::Value info;
+                        Json::FastWriter fwriter;
+                        info["name"]=friend1->name;
+                        info["signature"]=friend1->signature;
+                        info["portrait"]=friend1->portrait;
+                        string self_path = "user/"+msg["self_name"].asString()+"/friend_list.txt";
+                        ofstream fout(self_path, ios::app);
+                        fout<<fwriter.write(info);
+                        fout.close();
+                    }
+
+                    friend1 = util->getUserByName(msg["self_name"].asString());
+                    if(friend1 != NULL)
+                    {
+                        Json::Value info;
+                        Json::FastWriter fwriter;
+                        info["name"]=friend1->name;
+                        info["signature"]=friend1->signature;
+                        info["portrait"]=friend1->portrait;
+                        string self_path = "user/"+msg["friend_name"].asString()+"/friend_list.txt";
+                        ofstream fout(self_path, ios::app);
+                        fout<<fwriter.write(info);
+                        fout.close();
+                    }
+                }
+            }
+            else
+            {
+                if(util->getUserByName(msg["friend_name"].asString()) == NULL)  // username does not exist
+                {
+                    msg["isResponse"] = true;
+                    msg["body"] = -1;
+                    string str = msg.toStyledString();
+                    write(fd, str.c_str(), str.size());
+                    return;
+                }
+                dst_fd = util->getFdByName(msg["friend_name"].asString());
+                if(dst_fd != -1)   // online
+                    write(dst_fd, buf, len);
+                else{    // offline
+                    if(mq.find(msg["friend_name"].asString()) == mq.end())
+                        mq[msg["friend_name"].asString()] = new MessageQueue;
+                    mq[msg["friend_name"].asString()]->push(msg);
+                }
+            }
+
+            break;
+        }
+        case 8: // request friend info
+        {
+            string friend_name = msg["friend_name"].asString();
+            string friend_info_path = "user/" + friend_name + "/self_info.txt";
+            ifstream fin(friend_info_path);
+            char line[128]={0};
+            fin.getline(line, sizeof(line));
+            fin.close();
+            msg["friend_info"] = string(line);
+            string str = msg.toStyledString();
+            write(fd, str.c_str(), str.size());
+        }
     }
 }
 
